@@ -1,0 +1,23 @@
+{
+  "name": "wi-q/assignment",
+  "type": "project",
+  "description": "API Library Integration Task",
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "require": {
+    "php": ">=8.4",
+    "wi-q/great-food-sdk": "@dev",
+    "vlucas/phpdotenv": "^5.6"
+  },
+  "repositories": [
+    {
+      "type": "path",
+      "url": "lib"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  }
+}

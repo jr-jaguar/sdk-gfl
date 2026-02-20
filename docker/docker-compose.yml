@@ -1,0 +1,12 @@
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    command: tail -f /dev/null
+    volumes:
+      - ../:/app
+    environment:
+      PHP_IDE_CONFIG: "serverName=${PROJECT_NAME}-app"
+    container_name: ${PROJECT_NAME}-app
+    working_dir: /app

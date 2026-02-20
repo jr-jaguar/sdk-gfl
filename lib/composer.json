@@ -1,0 +1,13 @@
+{
+  "name": "wi-q/great-food-sdk",
+  "version": "1.0.0",
+  "require": {
+    "php": ">=8.4",
+    "guzzlehttp/guzzle": "^7.8"
+  },
+  "autoload": {
+    "psr-4": {
+      "WiQ\\Sdk\\": "src/"
+    }
+  }
+}
