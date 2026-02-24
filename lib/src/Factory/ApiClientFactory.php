@@ -7,11 +7,17 @@ namespace WiQ\Sdk\Factory;
 use WiQ\Sdk\Auth\AuthStrategyManager;
 use WiQ\Sdk\Client\ApiClientInterface;
 use WiQ\Sdk\Client\GuzzleApiClient;
+use WiQ\Sdk\Domain\Exceptions\InternalException;
+use WiQ\Sdk\Domain\Exceptions\SdkException;
+use WiQ\Sdk\Domain\Exceptions\ValidationException;
 use WiQ\Sdk\Infrastructure\Repository\GreatFoodRepository;
 use WiQ\Sdk\GreatFoodSdk;
 
 final readonly class ApiClientFactory
 {
+    /**
+     * @throws SdkException
+     */
     public static function create(
         string $baseUrl,
         array $config,
@@ -21,7 +27,7 @@ final readonly class ApiClientFactory
         $clientClass = $config['client_class'] ?? GuzzleApiClient::class;
 
         if (!is_subclass_of($clientClass, ApiClientInterface::class)) {
-            throw new \InvalidArgumentException(
+            throw new ValidationException(
                 sprintf("Class %s must implement ApiClientInterface", $clientClass)
             );
         }
@@ -36,13 +42,16 @@ final readonly class ApiClientFactory
         );
     }
 
+    /**
+     * @throws SdkException
+     */
     private static function initClient(
         string $class,
         string $baseUrl,
         array $config,
         array $httpConfig
     ): ApiClientInterface {
-
+        try {
         $authStrategy = new AuthStrategyManager()->resolve($config);
 
         return new $class(
@@ -50,5 +59,10 @@ final readonly class ApiClientFactory
             authStrategy: $authStrategy,
             config: $httpConfig
         );
+        } catch (\TypeError | \Error $e) {
+            throw new ValidationException("Invalid client configuration for {$class}: " . $e->getMessage(), 0, $e);
+        } catch (\Throwable $e) {
+            throw new InternalException("An unexpected error occurred during SDK initialization: " . $e->getMessage(), 0, $e);
+        }
     }
 }

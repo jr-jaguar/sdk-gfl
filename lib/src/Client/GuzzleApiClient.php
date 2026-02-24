@@ -8,6 +8,7 @@ use GuzzleHttp\Client as Guzzle;
 use GuzzleHttp\Exception\GuzzleException;
 use Psr\Http\Message\ResponseInterface;
 use WiQ\Sdk\Auth\AuthStrategyInterface;
+use WiQ\Sdk\Domain\Exceptions\NetworkException;
 use WiQ\Sdk\Domain\Exceptions\SdkException;
 
 class GuzzleApiClient implements ApiClientInterface
@@ -40,7 +41,7 @@ class GuzzleApiClient implements ApiClientInterface
         try {
             return $this->guzzle->request($method, $uri, $options);
         } catch (GuzzleException $e) {
-            throw new SdkException(
+            throw new NetworkException(
                 message: "API Request failed: " . $e->getMessage(),
                 code: $e->getCode(),
                 previous: $e

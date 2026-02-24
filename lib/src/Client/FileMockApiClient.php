@@ -7,6 +7,7 @@ namespace WiQ\Sdk\Client;
 use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use WiQ\Sdk\Auth\AuthStrategyInterface;
+use WiQ\Sdk\Domain\Exceptions\InternalException;
 
 readonly class FileMockApiClient implements ApiClientInterface
 {
@@ -26,7 +27,7 @@ readonly class FileMockApiClient implements ApiClientInterface
             $path === '/menus' => 'menus.json',
             str_contains($path, '/products') => 'menu-products.json',
             str_contains($path, '/product/') && $method === 'PUT' => null,
-            default => throw new \Exception("Fixture not found for path: $path"),
+            default => throw new InternalException("Fixture not found for path: $path"),
         };
 
         if ($file === null) {
@@ -36,7 +37,7 @@ readonly class FileMockApiClient implements ApiClientInterface
         $filePath = $this->responsesDir . $file;
 
         if (!file_exists($filePath)) {
-            throw new \Exception("Fixture file not found: $filePath");
+            throw new InternalException("Fixture file not found: $filePath");
         }
 
         return new Response(200, [], file_get_contents($filePath));

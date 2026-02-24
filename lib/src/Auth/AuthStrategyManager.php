@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace WiQ\Sdk\Auth;
 
+use WiQ\Sdk\Domain\Exceptions\SdkException;
+use WiQ\Sdk\Domain\Exceptions\ValidationException;
+
 final readonly class AuthStrategyManager
 {
     private array $strategyClasses;
@@ -15,14 +18,19 @@ final readonly class AuthStrategyManager
         ];
     }
 
+    /**
+     * @throws SdkException
+     */
     public function resolve(array $config): AuthStrategyInterface
     {
         foreach ($this->strategyClasses as $className) {
             if ($className::supports($config)) {
-                return $className::create($config); // Больше никаких match!
+                return $className::create($config);
             }
         }
-        throw new \InvalidArgumentException("No strategy found.");
+        throw new ValidationException(
+            sprintf("No auth strategy found for method: '%s'", $config['method'] ?? 'unknown')
+        );
     }
 
 }

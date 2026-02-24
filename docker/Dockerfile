@@ -16,6 +16,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
 
+COPY docker/entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 COPY composer.json composer.lock* ./
 COPY lib/ ./lib/
 
@@ -24,5 +27,7 @@ RUN composer install --no-interaction --no-scripts --no-autoloader --ignore-plat
 COPY . .
 
 RUN composer dump-autoload --optimize
+
+ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD ["vendor/bin/phpunit"]

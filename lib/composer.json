@@ -9,5 +9,10 @@
     "psr-4": {
       "WiQ\\Sdk\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WiQ\\Tests\\": "tests/"
+    }
   }
 }

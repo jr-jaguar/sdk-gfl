@@ -30,6 +30,17 @@ run-scenarios: ## Run Scenario 1 and Scenario 2
        $(DOCKER_COMPOSE) exec app php src/run.php; \
     fi
 
+test-lib: ## Run only SDK library tests
+	@if [ -n "$(APP_CONTAINER)" ]; then \
+		$(DOCKER_COMPOSE) exec -w /app/lib app ../vendor/bin/phpunit tests; \
+	fi
+
+test-app: ## Run only Application scenario tests
+	@if [ -n "$(APP_CONTAINER)" ]; then \
+		$(DOCKER_COMPOSE) exec app php vendor/bin/phpunit tests; \
+	fi
+
+
 
 
 

@@ -18,16 +18,21 @@ If you are running **without Docker**, you will need:
 
 This method ensures the environment matches the development setup perfectly.
 
-1. **Build and start the containers:**
+1. **Build the containers:**
    ```bash
    make build
    ```
-2. **Install dependencies:**
+2. **Start the containers:**
+
+    ```bash
+    make run
+   ```
+3. **Install dependencies:**
 
     ```bash
     make install
    ```
-3. **Run the business scenarios::**
+4. **Run the business scenarios::**
 
     ```bash
     make run-scenarios

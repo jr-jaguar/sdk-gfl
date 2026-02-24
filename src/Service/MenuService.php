@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use WiQ\Sdk\Domain\Exceptions\NetworkException;
+use WiQ\Sdk\Domain\Exceptions\ValidationException;
 use WiQ\Sdk\GreatFoodSdk;
 use WiQ\Sdk\Domain\DTO\Request\UpdateProductRequest;
 use WiQ\Sdk\Domain\Exceptions\SdkException;
@@ -43,8 +45,10 @@ class MenuService
                 echo "- [ID: {$product->id}] {$product->name}\n";
             }
 
+        } catch (NetworkException $e) {
+            echo "Network error while listing menus/products: " . $e->getMessage() . "\n";
         } catch (SdkException $e) {
-            echo "SDK Error in Scenario 1: " . $e->getMessage() . "\n";
+            echo "General SDK Error in Scenario 1: " . $e->getMessage() . "\n";
         }
     }
 
@@ -63,10 +67,12 @@ class MenuService
                 echo "Failed to update product #{$productId}.\n";
             }
 
+        } catch (ValidationException $e) {
+            echo "Validation Error (Check your input): " . $e->getMessage() . "\n";
+        } catch (NetworkException $e) {
+            echo "Network error during update: " . $e->getMessage() . "\n";
         } catch (SdkException $e) {
-            echo "SDK Error in Scenario 2: " . $e->getMessage() . "\n";
-        } catch (\InvalidArgumentException $e) {
-            echo "Validation Error: " . $e->getMessage() . "\n";
+            echo "General SDK Error in Scenario 2: " . $e->getMessage() . "\n";
         }
     }
 }
